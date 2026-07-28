@@ -52,15 +52,13 @@ static void lcr_info_judge(Median_Filter_t *mf,CON_RES_t *con)
 {
     static NEGPT_STATE neg_state = NEGATIVE_PLATE_STATE_DISCONNECT,pre_neg_state = NEGATIVE_PLATE_STATE_DISCONNECT;//负极板连接状态定义
     uint32_t cap;//计算的电容大小
-    uint32_t raw_cap;//未经过中值滤波的电容大小
     static uint16_t error_reduce = 0;
     if(neg_state == NEGATIVE_PLATE_STATE_ERROR && con->mea.C > NEGATIVE_PLATE_LIMIT3_HIGH)
     {
         error_reduce = NEGATIVE_PLATE_ERROR_REDUCE;
     }
     //对采集到的数据，进行中值滤波
-    raw_cap = con->mea.C*1000;
-    cap = median_filter_handle(mf,raw_cap);
+    cap = median_filter_handle(mf,con->mea.C*1000);
     if(cap < NEGATIVE_PLATE_LIMIT1_LOW)
     {
         if(error_reduce)
@@ -149,10 +147,8 @@ static void lcr_info_judge(Median_Filter_t *mf,CON_RES_t *con)
     }
     //赋值
     g_send_info.cap = cap;
-    negative_plate_diag_lcr_sample(raw_cap, cap, (uint8_t)neg_state);
     if(pre_neg_state != neg_state)
     {
-        negative_plate_diag_state_change(cap, (uint8_t)pre_neg_state, (uint8_t)neg_state);
         pre_neg_state = neg_state;
         g_send_info.neg_state = neg_state;
         monitor_board_inform_info_send();//立刻发送数据到主控板

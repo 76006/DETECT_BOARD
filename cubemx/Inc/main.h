@@ -60,7 +60,6 @@ void MX_DMA_Init(void);
 void MX_ADC1_Init(void);
 void MX_CAN1_Init(void);
 void MX_DAC_Init(void);
-void MX_SPI1_Init(void);
 void MX_USART6_UART_Init(void);
 void MX_ADC2_Init(void);
 void MX_TIM8_Init(void);
@@ -72,8 +71,6 @@ void DWT_Delay_us(uint32_t us);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define PEAK_Pin GPIO_PIN_2
-#define PEAK_GPIO_Port GPIOE
 #define DLPS_Pin GPIO_PIN_3
 #define DLPS_GPIO_Port GPIOE
 #define VCT_ADC10_Pin GPIO_PIN_0
@@ -114,9 +111,6 @@ CAN_HandleTypeDef hcan1;
 DAC_HandleTypeDef hdac;
 DMA_HandleTypeDef hdma_dac1;
 DMA_HandleTypeDef hdma_dac2;
-
-SPI_HandleTypeDef hspi1;
-DMA_HandleTypeDef hdma_spi1_rx;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;

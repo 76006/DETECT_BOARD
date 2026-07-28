@@ -17,7 +17,6 @@ uint16_t user_adc_buf[USER_ADC_BUF_DATA_SIZE];
 uint16_t adc2_buffer[ADC_BUFFER_SIZE];
 struct rt_semaphore adc_sem;
 struct rt_semaphore bd_sem;
-extern uint16_t adc_ok;
 ADC_MANAGE_t g_adc_manage;
 extern SEND_INFO_t g_send_info;
 uint8_t BD_error_sendflag = 0 ;//气泡传感器发送标志
@@ -26,7 +25,9 @@ uint8_t ADC_info_print_flag=0;
 uint8_t ADC2_info_print_flag=0;
 uint16_t BD_EMPTY =1800;
 uint16_t BD_FULL =4000;
-extern float calibrate_num;
+#ifdef VCTADC
+#define VCT_ADC_CALIBRATE_NUM 2.28f
+#endif
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
     if(hadc->Instance == ADC1)
@@ -86,7 +87,7 @@ void BD_thread_entry(void *parameter)
 #ifdef VCTADC
                         if (i%2==0)
                         {
-                            rt_kprintf("V[%d]: %d\n", i, (uint32_t)(((float)(adc2_buffer[i])*calibrate_num/4096/4)*1000*10));
+                            rt_kprintf("V[%d]: %d\n", i, (uint32_t)(((float)(adc2_buffer[i])*VCT_ADC_CALIBRATE_NUM/4096/4)*1000*10));
                         }
                         else {
                             //                            rt_kprintf("V[%d]: %d\n", i, adc2_buffer[i]);
@@ -141,43 +142,6 @@ int BD_task_init(void)
     else
     {
         rt_kprintf("Failed to create ADC thread!\n");
-        return -RT_ERROR;
-    }
-}
-void peak_thread_entry(void *parameter)
-{
-    while(1)
-    {
-        HAL_GPIO_WritePin(PEAK_GPIO_Port, PEAK_Pin, GPIO_PIN_RESET);
-        rt_thread_mdelay(50);
-        HAL_GPIO_WritePin(PEAK_GPIO_Port, PEAK_Pin, GPIO_PIN_SET);
-        rt_thread_mdelay(10);
-
-    }
-}
-void peaktoggle_task_init(void)
-{
-    rt_thread_t tid;
-
-    /* 创建线程 */
-    tid = rt_thread_create(
-        "peak_thread",          // 线程名称（确保唯一）
-        peak_thread_entry,      // 线程入口函数
-        RT_NULL,              // 参数
-        2048,                 // 堆栈大小（建议 >= 1024）
-        25,                   // 优先级（数值越小优先级越高）
-        10                    // 时间片（调度时间）
-    );
-
-    if (tid != RT_NULL)
-    {
-        rt_thread_startup(tid);
-        rt_kprintf("peak thread started successfully!\n");
-        return RT_EOK;
-    }
-    else
-    {
-        rt_kprintf("Failed to create peak thread!\n");
         return -RT_ERROR;
     }
 }
@@ -357,7 +321,6 @@ static int SETBD_EMPTY(int argc, char **argv)
     if (argc != 2)
         {
 //            rt_kprintf("Usage: set_value <integer_value>\n");
-//            rt_kprintf("Current value: %.2f\n", calibrate_num);
             return;
         }
 
@@ -373,7 +336,6 @@ static int SETBD_FULL(int argc, char **argv)
     if (argc != 2)
         {
 //            rt_kprintf("Usage: set_value <integer_value>\n");
-//            rt_kprintf("Current value: %.2f\n", calibrate_num);
             return;
         }
 

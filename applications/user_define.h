@@ -32,7 +32,7 @@
 //以下数值，只有在发布时，才需要动
 #define DEVICE_NUMBER_CODE                                 (0x03)//占用一个字节，设备码，用于代表监测板
 #define COMMUNITICATION_PROTOCOL_VER                       (0x01)//占用一个字节，通信协议版本
-#define DEVICE_SOFTWARE_VER                                (10000)//占用一个字节，软件版本
+#define DEVICE_SOFTWARE_VER                                (10001)//占用一个字节，软件版本
 #define DEVICE_HARDWARE_VER                                (10000)//占用一个字节，硬件版本
 
 
@@ -112,8 +112,6 @@ typedef enum {
 typedef struct {
     NEGPT_STATE neg_state;//负极板连接状态定义
     uint8_t Bubble_sensor_zerocount;//气泡传感器数据中0值个数
-    float sample_voltage_f;//采样电压
-    uint16_t sample_voltage_u16;//
     uint32_t cap;//计算的电容大小
 }SEND_INFO_t;
 

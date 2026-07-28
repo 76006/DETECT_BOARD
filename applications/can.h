@@ -70,8 +70,6 @@
 /* Public typedef ------------------------------------------------------------*/
 typedef struct {
     struct rt_can_msg msg;
-    rt_tick_t enqueue_tick;
-    uint32_t diag_seq;
 }MSG_CAN_T;
 
 typedef struct {
@@ -128,7 +126,6 @@ typedef struct {
 
 /* Public variables ----------------------------------------------------------*/
 extern uint8_t ota_start_flag;
-extern MSG_CAN_MAIN_RF_INFO_STRUCT MSG_MAIN_RF_INFO;
 
 /* Public function prototypes ------------------------------------------------*/
 
@@ -144,10 +141,6 @@ rt_err_t monitor_board_handshake_send_to_can_mq(void);
 void user_can_resoure_init(void);
 
 void user_can_task_init(void);
-
-void negative_plate_diag_lcr_sample(uint32_t raw_cap, uint32_t filtered_cap, uint8_t neg_state);
-
-void negative_plate_diag_state_change(uint32_t cap, uint8_t old_state, uint8_t new_state);
 
 
 #endif

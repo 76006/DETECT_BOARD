@@ -59,8 +59,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define PEAK_Pin GPIO_PIN_2
-#define PEAK_GPIO_Port GPIOE
 #define DLPS_Pin GPIO_PIN_3
 #define DLPS_GPIO_Port GPIOE
 #define LCR_ADC1_Pin GPIO_PIN_1
@@ -71,6 +69,8 @@ void Error_Handler(void);
 #define LCR_DAC1_GPIO_Port GPIOA
 #define BD_DAC2_Pin GPIO_PIN_5
 #define BD_DAC2_GPIO_Port GPIOA
+#define CONV_Pin GPIO_PIN_15
+#define CONV_GPIO_Port GPIOA
 #define SCK_Pin GPIO_PIN_3
 #define SCK_GPIO_Port GPIOB
 #define SDO_Pin GPIO_PIN_4
